@@ -32,7 +32,7 @@ permalink: /quiz
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-    <h1><center>Space trrQuiz</center></h1>
+    <h1><center>Space Quiz</center></h1>
     <div id="quiz-container">
         <div id="question-container"><center>
             <p id="question-text"></p>
@@ -69,7 +69,7 @@ permalink: /quiz
     </table>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        const apiUrl = "https://cosmic-backend.stu.nighthawkcodingsociety.com/api/quiz/";
+        const apiUrl = "http://localhost:8027/api/quiz/";
         const options = {
             method: 'GET',
             mode: 'cors',
