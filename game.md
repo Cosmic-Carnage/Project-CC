@@ -1,8 +1,3 @@
----
-layout: default
-title: Game
-permalink: /game
----
 <html>
 <head>
     <title>Cosmic Carnage</title>
@@ -55,7 +50,7 @@ permalink: /game
     </style>
 </head>
 <body>
-    <canvas id="gameCanvas" width="400" height="400"></canvas>
+    <canvas id="gameCanvas" width="600" height="425"></canvas>
 <html>
 <head>
     <title>Player List</title>
@@ -149,10 +144,10 @@ permalink: /game
         const ctx = canvas.getContext('2d'); // 2d rendering of canvas
         const player = { // define player properties
             x: canvas.width / 2,
-            y: canvas.height - 40,
-            width: 60,
-            height: 60,
-            speed: 15,
+            y: canvas.height - 60,
+            width: 50,
+            height: 50,
+            speed: 20,
             angle: 0
         };
         const bullets = []; // create an array to store bullets
@@ -170,6 +165,8 @@ permalink: /game
         playerImage.src = 'https://github.com/TayKimmy/CSA_Repo/assets/107821010/28c3e277-b292-43f0-bcef-5460b19689b7'; // making the player a spaceship image
         const enemyImage = new Image();
         enemyImage.src = 'https://github.com/Ant11234/student/assets/40652645/b7e15072-5d72-48f9-ad28-fdb227f2b20d'; // making the enemy a ufo image
+        const minibossImage = new Image();
+        minibossImage.src = 'https://github.com/Ant11234/student/assets/40652645/3bf0b840-7b21-428d-858b-3c668db352f6'; // making a miniboss
         playerImage.onload = () => {
             draw(); // execute draw() when the player's image is loaded
         };
@@ -228,22 +225,72 @@ permalink: /game
                 }
             }
         }
-        // draw on the canvas
+        let killedEnemies = 0;
+        const miniBoss = {
+            x: 0,
+            y: 0,
+            width: 100,
+            height: 100,
+            speed: 10,
+        };
+        // Function to spawn the mini-boss
+        function spawnMiniBoss() {
+            miniBoss.x = Math.random() * (canvas.width - miniBoss.width);
+            miniBoss.y = Math.random() * (canvas.height - miniBoss.height);
+        }
+        // Draw the mini-boss
+        function drawMiniBoss() {
+            ctx.drawImage(minibossImage, miniBoss.x, miniBoss.y, miniBoss.width, miniBoss.height);
+        }
+        // Update the mini-boss
+        function updateMiniBoss() {
+            miniBoss.x += (Math.random() - 0.5) * miniBoss.speed;
+            miniBoss.y += (Math.random() - 0.5) * miniBoss.speed;
+            miniBoss.x = Math.max(0, Math.min(canvas.width - miniBoss.width, miniBoss.x));
+            miniBoss.y = Math.max(0, Math.min(canvas.height - miniBoss.height, miniBoss.y));
+        }
+        // Check for collisions with the mini-boss
+        function checkMiniBossCollision() {
+            if (
+                player.x < miniBoss.x + miniBoss.width &&
+                player.x + player.width > miniBoss.x &&
+                player.y < miniBoss.y + miniBoss.height &&
+                player.y + player.height > miniBoss.y
+            ) {
+                isGameOver = true;
+            }
+            for (let i = 0; i < bullets.length; i++) {
+                if (
+                    bullets[i].x < miniBoss.x + miniBoss.width &&
+                    bullets[i].x + bullets[i].width > miniBoss.x &&
+                    bullets[i].y < miniBoss.y + miniBoss.height &&
+                    bullets[i].y + bullets[i].height > miniBoss.y
+                ) {
+                    spawnMiniBoss(); // Respawn the mini-boss
+                    bullets.splice(i, 1);
+                    score += 10; // Increment the score when mini-boss is hit
+                }
+            }
+        }
+        spawnMiniBoss();
+        // Modify the draw function to include the mini-boss
         function draw() {
-             ctx.clearRect(0, 0, canvas.width, canvas.height); // clear the canvas
-            if (!isGameOver && timeLeft > 0) { // if it is not game over and time is left
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (!isGameOver && timeLeft > 0) {
                 drawPlayer();
                 drawEnemy();
+                drawMiniBoss(); // Draw the mini-boss
+                updateMiniBoss();
                 drawBullets();
                 moveBullets();
                 checkCollision();
+                checkMiniBossCollision(); // Check for mini-boss collision
                 requestAnimationFrame(draw);
-                // display the score and time on the canvas
                 ctx.font = "20px Arial";
                 ctx.fillStyle = "white";
                 ctx.fillText("Score: " + score, 10, 30);
                 ctx.fillText("Time Left: " + timeLeft + "s", 10, 60);
-            } else if (!isGameOver && timeLeft === 0) { 
+            } else if (!isGameOver && timeLeft === 0) {
                 isGameOver = true;
                 ctx.font = "30px Arial";
                 ctx.fillStyle = "red";
@@ -313,8 +360,6 @@ permalink: /game
 </body>
 </html>
 
-<!-- Links to the player spaceship animation frames -->
+<!-- Enemy flying design -->
 
-<!-- https://github.com/Ant11234/student/assets/40652645/b962acee-3350-48d3-b299-c9c27ace6765 -->
-<!-- https://github.com/Ant11234/student/assets/40652645/f72a81c8-4a8a-471d-b041-1cdd3b955a8c -->
-<!-- https://github.com/Ant11234/student/assets/40652645/2d7ac38c-23e2-436e-b50d-b2e0a9f08049 -->
+<!-- https://github.com/Ant11234/student/assets/40652645/3bf0b840-7b21-428d-858b-3c668db352f6 -->
