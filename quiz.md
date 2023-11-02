@@ -32,7 +32,7 @@ permalink: /quiz
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-    <h1><center>Space Quiz</center></h1>
+    <h1><center>Space trrQuiz</center></h1>
     <div id="quiz-container">
         <div id="question-container"><center>
             <p id="question-text"></p>
