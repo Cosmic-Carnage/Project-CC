@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard</title>
+    <style>
+        @font-face {
+    font-family: "Archive";
+    src: url("./assets/Archive/Archive-Regular.ttf");
+}
+
+.body {
+    background-image: url("./assets/svg/background.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    cursor: default;
+    font-family: Archive;
+    background-attachment: fixed;
+}
+
+.logintext {
+    font-family: Archive;
+    font-size: 20px;
+    color: #ffffff;
+}
+
+.deletetext {
+    font-family: Archive;
+    font-size: 20px;
+}
+
+
+.using {
+    font-family: Archive;
+    font-size: 20px;
+    color: #D9D9D9;
+}
+
+.maintext {
+    font-family: Archive;
+    font-size: 84px;
+    color: #FFFFFF;
+    text-align: center;
+}
+
+input[type="text"] {
+    font-family: Archive;
+    font-size: 20px;
+    background: transparent;
+    border: none;
+    outline: none;
+    opacity: 1;
+    color: #1D0D33;
+}
+
+input[type="password"] {
+    font-family: Archive;
+    font-size: 20px;
+    background: transparent;
+    border: none;
+    outline: none;
+    opacity: 1;
+    color: #1D0D33;
+}
+    </style>
+</head>
+<body class = "body" onload="init();">
+    <p style="color: #ffffff; size: 32px;" onclick="window.location = '/'">BACK</p>
+    <div id="leaderboard" style="opacity: 0;">
+        <img id="lbWindow" width="732" height="596" style="position: absolute;left: 354px;top: 201px;" src="./assets/svg/signupbox.svg">
+        <img id="lbText" width="601" height="101" style="position: absolute;left: 420px;top: 92px;" src="./assets/svg/leaderboardText.svg">
+    </div>
+</body>
+<script>
+async function init() {
+    fetchLb();
+    await sleep(250);
+    resize();
+    unfade("leaderboard");
+}
+
+function unfade(element) {
+    var op = 0.1;
+    var timer = setInterval(function () {
+        if (op >= 1){
+            clearInterval(timer);
+        }
+        document.getElementById(element).style.opacity = op;
+        op += op * 0.1;
+    }, 10);
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+function mergeSort(arr, prop) {
+    // Base case
+    if (arr.length <= 1) return arr;
+    let mid = Math.floor(arr.length / 2);
+    // Recursive calls
+    let left = mergeSort(arr.slice(0, mid), prop);
+    let right = mergeSort(arr.slice(mid), prop);
+    return merge(left, right, prop);
+}
+
+function merge(left, right, prop) {
+    let result = [];
+    let leftIndex = 0;
+    let rightIndex = 0;
+
+    while (leftIndex < left.length && rightIndex < right.length) {
+        if (left[leftIndex][prop] > right[rightIndex][prop]) { // Reverse the comparison
+            result.push(left[leftIndex]);
+            leftIndex++;
+        } else {
+            result.push(right[rightIndex]);
+            rightIndex++;
+        }
+    }
+
+    return result.concat(left.slice(leftIndex), right.slice(rightIndex));
+}
+
+
+function fetchLb() {
+    const data = JSON.stringify({
+        method: 'POST', // *GET, POST, PUT, DELETE, etc.
+        mode: 'cors', // no-cors, *cors, same-origin
+        cache: 'default', // *default, no-cache, reload, force-cache, only-if-cached
+        credentials: 'omit', // include, *same-origin, omit
+        headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Credentials': '*'
+        },
+    });
+
+    const xhr = new XMLHttpRequest();
+    xhr.withCredentials = false;
+
+    xhr.addEventListener('readystatechange', function () {
+    	if (this.readyState === this.DONE) {
+    		retdata = this.responseText;
+            // filter and log text based off moon entry
+            // if moon entry is not found, log "moon not found"
+            retdata = JSON.parse(retdata)
+            sortedRetdata = mergeSort(retdata, "score");
+            for (entry=0; entry<=6; entry++) {
+                player = sortedRetdata[entry]["leaderboard"]
+                score = sortedRetdata[entry]["score"]
+                const div = document.createElement("div");
+                div.setAttribute("id", "lbEntry" + entry);
+                document.getElementById("leaderboard").appendChild(div);
+
+
+                const childDiv1 = document.createElement("img");
+                document.getElementById("lbEntry" + entry).appendChild(childDiv1);
+                childDiv1.setAttribute("id", "lbEntry" + entry + "Box");
+                document.getElementById("lbEntry" + entry + "Box").width = "526";
+                document.getElementById("lbEntry" + entry + "Box").height = "56";
+                document.getElementById("lbEntry" + entry + "Box").style.position = "absolute";
+                document.getElementById("lbEntry" + entry + "Box").style.left = "436px";
+                document.getElementById("lbEntry" + entry + "Box").style.top = "calc(240px + " + entry + " * 78px)";
+                document.getElementById("lbEntry" + entry + "Box").src = "./assets/svg/leaderboardEntry.svg";
+
+                const childDiv2 = document.createElement("div");
+                document.getElementById("lbEntry" + entry).appendChild(childDiv2);
+                childDiv2.setAttribute("id", "lbEntry" + entry + "BoxName");
+                document.getElementById("lbEntry" + entry + "BoxName").style.position = "absolute";
+                document.getElementById("lbEntry" + entry + "BoxName").style.left = "462px";
+                document.getElementById("lbEntry" + entry + "BoxName").style.top = "calc(257px + " + entry + " * 78px)";
+                document.getElementById("lbEntry" + entry + "BoxName").style.textAlign = "center";
+                document.getElementById("lbEntry" + entry + "BoxName").style.lineHeight = "21px";
+                document.getElementById("lbEntry" + entry + "BoxName").style.height = "21px";
+                document.getElementById("lbEntry" + entry + "BoxName").style.width = "373px";
+                document.getElementById("lbEntry" + entry + "BoxName").innerHTML = player;
+
+
+
+                const childDiv3 = document.createElement("lbEntry" + entry + "BoxName");
+                document.getElementById("lbEntry" + entry).appendChild(childDiv3);
+                childDiv3.setAttribute("id", "lbEntry" + entry + "BoxScore");
+                document.getElementById("lbEntry" + entry + "BoxScore").style.position = "absolute";
+                document.getElementById("lbEntry" + entry + "BoxScore").style.left = "885px";
+                document.getElementById("lbEntry" + entry + "BoxScore").style.top = "calc(257px + " + entry + " * 78px)";
+                document.getElementById("lbEntry" + entry + "BoxScore").style.textAlign = "center";
+                document.getElementById("lbEntry" + entry + "BoxScore").style.lineHeight = "21px";
+                document.getElementById("lbEntry" + entry + "BoxScore").style.height = "21px";
+                document.getElementById("lbEntry" + entry + "BoxScore").style.width = "60px";
+                document.getElementById("lbEntry" + entry + "BoxScore").innerHTML = score;
+            }
+            // for item in data['bodies'], check to see if text entry matches
+            // if it does, log the item
+            // if it doesn't, log "moon not found"
+    	}
+    });
+
+    xhr.open('GET', 'https://cosmic-backend.stu.nighthawkcodingsociety.com/api/leaderboard/');
+
+    xhr.send(data);
+
+    
+}
+
+
+</script>
+<script> // RESIZING
+function dynamic_TextPositioning(idName, originalLeft, originalTop, size) {
+    var element = document.getElementById(idName);
+    var element_Top = size * originalTop;
+    element.style.top = element_Top + "px";
+    var element_Left = size * originalLeft;
+    element.style.left = element_Left + "px";
+}
+function dynamic_TextSize(className, originalSize, size) {
+    var element_Font = size * originalSize;
+    var elements = document.getElementsByClassName(className);
+    for (var i = 0; i < elements.length; i++) {
+        var element = elements[i];
+        element.style.fontSize = element_Font + "px";
+    }
+}
+function dynamic_TextSizeByID(idName, originalSize, size) {
+    var element_Font = size * originalSize;
+    var element = document.getElementById(idName);
+    element.style.fontSize = element_Font + "px";
+}
+function dynamic_imgSize(idName, originalWidth, originalHeight, originalLeft, originalTop, size) {
+    var element = document.getElementById(idName);
+    var element_Height = size * originalHeight;
+    element.style.height = element_Height + "px";
+    var element_Width = size * originalWidth;
+    element.style.width = element_Width + "px";
+    var element_Top = size * originalTop;
+    element.style.top = element_Top + "px";
+    var element_Left = size * originalLeft;
+    element.style.left = element_Left + "px";
+}
+function dynamic_divSize(idName, originalWidth, originalHeight, originalLeft, originalTop, size) {
+    var element = document.getElementById(idName);
+    var element_Height = size * originalHeight;
+    element.style.height = element_Height + "px";
+    element.style.lineHeight = element_Height + "px";
+    var element_Width = size * originalWidth;
+    element.style.width = element_Width + "px";
+    var element_Top = size * originalTop;
+    element.style.top = element_Top + "px";
+    var element_Left = size * originalLeft;
+    element.style.left = element_Left + "px";
+}
+
+window.onresize = resize;
+function resize() {
+    var size = window.innerWidth / 1440;
+    // LEADERBOARD //
+    dynamic_imgSize("lbWindow", 732, 596, 354, 201, size);
+    dynamic_imgSize("lbText", 601, 101, 420, 92, size);
+    for (i=0; i<=6; i++) {
+        boxTop = 240 + i * 78;
+        boxNameTop = 257 + i * 78;
+        boxScoreTop = 257 + i * 78;
+        try {
+            dynamic_imgSize("lbEntry" + i + "Box", 526, 56, 436, boxTop, size);
+        } catch (error) {
+            break;
+        }
+        dynamic_divSize("lbEntry" + i + "BoxName", 373, 21, 462, boxNameTop, size);
+        dynamic_TextSizeByID("lbEntry" + i + "BoxName", 20, size);
+        dynamic_divSize("lbEntry" + i + "BoxScore", 60, 21, 885, boxScoreTop, size);
+        dynamic_TextSizeByID("lbEntry" + i + "BoxScore", 20, size);
+    }
+}
+</script>
