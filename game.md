@@ -63,6 +63,26 @@ permalink: /game
         #message {
             text-align: center;
         }
+        canvas, table, #playAgainButton {
+            display: none;
+        }
+        #playAgainButton {
+            display: none;
+            background-color: #662d91; /* Set the button background color to purple */
+            color: white; /* Set the text color to white */
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold; /* Make the text bold */
+        }
+        #createPlayerForm {
+            background-color: #662d91; /* Set the background color to purple */
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -115,12 +135,28 @@ permalink: /game
         }
         // Fetch and display player data
         fetchPlayerData();
+        function startGame() {
+            canvas.style.display = 'block';
+            document.querySelector('h1').style.display = 'block';
+            document.querySelector('table').style.display = 'block';
+            // Clear the canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Reset game variables
+            isGameOver = false;
+            score = 0;
+            timeLeft = 30;
+            // Reset player position
+            player.x = canvas.width / 2;
+            player.y = canvas.height - 40;
+            // Add any other variable resets here
+            // Start the game loop
+            draw();
+        }
         // Display the "Create Player" form when the Start Game button is clicked
         document.getElementById("createPlayerForm").addEventListener("submit", function (e) {
             e.preventDefault();
             const user = document.getElementById("user").value;
             // Display a success message
-            document.getElementById("message").innerHTML = `Hello, ${user}! The game is starting...`;
             document.getElementById("createPlayerForm").style.display = "none"; // Hide the form
             startGame(); // Call your game start function here
         });
