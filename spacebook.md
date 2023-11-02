@@ -59,34 +59,31 @@ permalink: /spacebook
     <title>Spacebook</title>
 </head>
 <body>
-    <h1>Upload Files</h1>
-    <form id="fileUploadForm" action="#" enctype="multipart/form-data">
-        <input type="file" id="fileInput" name="file">
-        <button type="button" onclick="uploadFile()">Upload</button>
+    <form id="uploadForm" enctype="multipart/form-data" method="post">
+        <input type="file" name="image" accept=".jpg, .png, .gif">
+        <input type="text" name="fileName" placeholder="Enter file name">
+        <input type="submit" value="Upload Image">
     </form>
-    <p id="responseMessage"></p>
     <script>
-        function uploadFile() {
-            const fileInput = document.getElementById('fileInput');
-            const file = fileInput.files[0];
-            if (!file) {
-                alert("Please select a file to upload.");
-                return;
-            }
-            const formData = new FormData();
-            formData.append('file', file);
-            fetch('https://cosmic-backend.stu.nighthawkcodingsociety.com/api/spacebook/', { //add to this
-                method: 'POST',
-                body: formData,
-            })
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('responseMessage').textContent = data.message;
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('responseMessage').textContent = 'Upload failed.';
-            });
-        }
+        document.getElementById("uploadForm").addEventListener("submit", function (event) {
+            event.preventDefault();
+            const form = new FormData(this);
+            // Create a new XMLHttpRequest object
+            const xhr = new XMLHttpRequest();
+            // Define the HTTP method and the URL
+            xhr.open("POST", "https://cosmic-backend.stu.nighthawkcodingsociety.com/image", true);
+            // Set CORS headers
+            xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+            // Handle the response
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    console.log("Image request successful!");
+                } else {
+                    console.error("Image request failed with status: " + xhr.status);
+                }
+            };
+            // Send the request
+            xhr.send(form);
+        });
     </script>
 </body>
