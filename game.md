@@ -170,6 +170,33 @@
         playerImage.onload = () => {
             draw(); // execute draw() when the player's image is loaded
         };
+        function gameLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (!isGameOver && timeLeft > 0) {
+                drawPlayer();
+                drawEnemy();
+                drawMiniBoss(); // Draw the mini-boss
+                updateMiniBoss();
+                drawBullets();
+                moveBullets();
+                checkCollision();
+                checkMiniBossCollision(); // Check for mini-boss collision
+                // Request the next animation frame
+                requestAnimationFrame(gameLoop);
+                gameLoop();
+            } else if (!isGameOver && timeLeft === 0) {
+                isGameOver = true;
+                ctx.font = "30px Arial";
+                ctx.fillStyle = "red";
+                ctx.fillText("Time's Up!", canvas.width / 2 - 80, canvas.height / 2);
+                ctx.fillText("Score: " + score, canvas.width / 2 - 60, canvas.height / 2 + 40);
+            } else {
+                ctx.font = "30px Arial";
+                ctx.fillStyle = "red";
+                ctx.fillText("Game Over", canvas.width / 2 - 80, canvas.height / 2);
+                ctx.fillText("Score: " + score, canvas.width / 2 - 60, canvas.height / 2 + 40);
+            }
+        }
         // draw the player's spaceship
         function drawPlayer() {
             ctx.save(); // Save the current context state
