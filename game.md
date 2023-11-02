@@ -7,11 +7,13 @@ permalink: /game
 <head>
     <title>Cosmic Carnage</title>
     <style>
+        /* Styling for the canvas */
         canvas {
             background-color: black;
             display: block;
             margin: 0 auto;
         }
+        /* Styling for the page body */
         body {
             font-family: Arial, sans-serif;
             background-color: #f2f2f2;
@@ -23,19 +25,23 @@ permalink: /game
             justify-content: center;
             height: 100vh;
         }
+        /* Center-aligned heading */
         h1 {
             text-align: center;
         }
+        /* Styling for the "Create Player" form */
         #createPlayerForm {
             background-color: gray;
             border-radius: 5px;
             padding: 20px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            display: none; /* Hide the form initially */
+            display: block;
         }
+        /* Bold styling for labels */
         label {
             font-weight: bold;
         }
+        /* Styling for text input */
         input[type="text"] {
             width: 100%;
             padding: 10px;
@@ -44,6 +50,7 @@ permalink: /game
             border-radius: 4px;
             color: black;
         }
+        /* Styling for the submit button */
         input[type="submit"] {
             background-color: gray;
             color: black;
@@ -52,6 +59,7 @@ permalink: /game
             border-radius: 4px;
             cursor: pointer;
         }
+        /* Center-aligned message text */
         #message {
             text-align: center;
         }
@@ -79,6 +87,8 @@ permalink: /game
         <input type="submit" value="Start Game">
     </form>
     <p id="message"></p>
+    <!-- Add the "Play Again" button here -->
+    <button id="playAgainButton" style="display: none;">Play Again</button>
     <script>
         // Fetch player data from our backend API
         function fetchPlayerData() {
@@ -103,6 +113,7 @@ permalink: /game
                     console.error('Error fetching player data:', error);
                 });
         }
+        // Fetch and display player data
         fetchPlayerData();
         // Display the "Create Player" form when the Start Game button is clicked
         document.getElementById("createPlayerForm").addEventListener("submit", function (e) {
@@ -113,6 +124,7 @@ permalink: /game
             document.getElementById("createPlayerForm").style.display = "none"; // Hide the form
             startGame(); // Call your game start function here
         });
+        // Initialize the canvas and game parameters
         const canvas = document.getElementById('gameCanvas'); // create canvas element
         const ctx = canvas.getContext('2d'); // 2d rendering of canvas
         const player = { // define player properties
@@ -247,6 +259,22 @@ permalink: /game
                 }
             }
         }
+        const playAgainButton = document.getElementById("playAgainButton");
+        playAgainButton.addEventListener("click", function () {
+            // Reset game variables
+            isGameOver = false;
+            score = 0;
+            timeLeft = 30;
+            player.x = canvas.width / 2;
+            player.y = canvas.height - 40;
+            // Hide the button and show the "Create Player" form
+            playAgainButton.style.display = "none";
+            document.getElementById("createPlayerForm").style.display = "block";
+            // Clear the canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Call your game start function again
+            startGame();
+        });
         spawnMiniBoss();
         // draw on the canvas
         function draw() {
@@ -277,6 +305,16 @@ permalink: /game
                 ctx.fillStyle = "red";
                 ctx.fillText("Game Over", canvas.width / 2 - 80, canvas.height / 2);
                 ctx.fillText("Score: " + score, canvas.width / 2 - 60, canvas.height / 2 + 40);
+            } if (isGameOver) {
+                // Display game over message and score
+                ctx.font = "30px Arial";
+                ctx.fillStyle = "red";
+                ctx.fillText("Game Over", canvas.width / 2 - 80, canvas.height / 2);
+                ctx.fillText("Score: " + score, canvas.width / 2 - 60, canvas.height / 2 + 40);
+                // Show the "Play Again" button
+                console.log("Setting button to block");
+                playAgainButton.style.display = "block";
+                console.log("Button style: " + playAgainButton.style.display);
             }
         }
         const playerImages = [
@@ -317,7 +355,7 @@ permalink: /game
             } else {
                 clearInterval(timerInterval); // clear interval if game is over
             }
-        }, 1000); // 1000 ms - making sure it is every 1 second
+        }, 1000); // 100
     </script>
 </body>
 </html>
