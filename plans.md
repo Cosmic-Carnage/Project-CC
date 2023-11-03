@@ -23,3 +23,10 @@ permalink: /plans
 - Code a baseline for the game
 - Start work on backend API to store usernames and scores
 - Work on Create() function so that users are created when they play the game
+
+---
+
+## Raymond's Plans
+- Work on Spacebook API to like, dislike, comment, upload, delete images
+- Work on frontend implementation for these functions
+- Work on Leaderboard API to store scores for game/Quiz
